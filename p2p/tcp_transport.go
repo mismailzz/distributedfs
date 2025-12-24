@@ -55,6 +55,9 @@ func (t *TCPTransport) startAcceptLoopForConnection(listener net.Listener) {
 
 // Handle new incoming connection - every connection gets its own goroutine to handle its connection
 func (t *TCPTransport) handleNewConnection(conn net.Conn) {
+
+	defer conn.Close()
+
 	log.Printf("New connection established from %s", conn.RemoteAddr().String())
 
 	// Perform handshake
@@ -71,12 +74,9 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 		err := t.DecoderFunc.Decode(conn, &rpc)
 		if err != nil {
 			log.Printf("Error decoding message from %s: %v", conn.RemoteAddr().String(), err)
-			continue
+			return
 		}
 		log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))
 	}
 
 }
-
-
-// TODO: Close connectin and listener methods

@@ -23,3 +23,10 @@ PHASE - I = p2p lib (PeerToPeer)
 
 -- BUG (Not Fixed): After breaking the connection from the client terminal, this server side for that connection doesnt close the conenction and stuck in loop i.e Error decoding message from [::1]:56450: EOF
 
+-- In this we covered second example of dependency injection like using interface ( and declaring the defaultObj) - i think it can be done by func fallback approach as like HandShakeFunc for now but we opted this method because interface allows more room of change - for now we dont need but better to have seen this as an example usage. Also refer, if an opbject implement interface then it can ack like interface i.e conn in broder term and can be used as io.Reader etc
+
+1.7 - BUG Mitigation - As connetion get error during decoding then we just close the connection (Done)
+
+-- Prevented infinite loop 
+
+-- BUG - but this fix doesnt ensure that the error happens due to decoding logic (for which we can retry) or does it happens due to the coonection problem. Its not a good fix. :(
