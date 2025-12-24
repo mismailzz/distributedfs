@@ -52,6 +52,7 @@ func (t *TCPTransport) startAcceptLoopForConnection(listener net.Listener) {
 	}
 }
 
+// Handle new incoming connection - every connection gets its own goroutine to handle its connection
 func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 	log.Printf("New connection established from %s", conn.RemoteAddr().String())
 
@@ -61,6 +62,20 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 			log.Printf("Handshake failed with %s: %v", conn.RemoteAddr().String(), err)
 		}
 		log.Printf("Handshake successful with %s", conn.RemoteAddr().String())
+	}
+
+	rpc := &RPC{}
+	for { // Loop to read the message from the connection
+		
+		buf := make([]byte, 1024) // Adjust buffer size as needed
+		n, err := conn.Read(buf)
+		if err != nil {
+			log.Printf("Error reading from connection %s: %v", conn.RemoteAddr().String(), err)
+			return
+		}
+		rpc.Sender = conn.RemoteAddr()
+		rpc.Payload = buf[:n]
+		log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))
 	}
 }
 

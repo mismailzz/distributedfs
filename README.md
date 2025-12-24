@@ -7,7 +7,7 @@ PHASE - I = p2p lib (PeerToPeer)
 
 1.2 - Connections are being Accepted and Handled - minmail funcs (Done)
 
-1.3 - HandShakeFunc Definition i.e some time we have to implement it. Minimal setup, better to have it right now. 
+1.3 - HandShakeFunc Definition i.e some time we have to implement it. Minimal setup, better to have it right now. (Done)
 
 -- refactored func name of Accept and Handle func to make them private (Done)
 
@@ -16,3 +16,4 @@ PHASE - I = p2p lib (PeerToPeer)
 -- Also check if the HandShake Func is provided or not - which make us independent like either defined or not, if defined than we use and vice versa - woooooo 
 
 1.4 - Formatting README
+1.5 - Reading the Message (RPC) from the connection in the HandleConnection func (Done)
