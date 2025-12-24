@@ -8,6 +8,7 @@ func main(){
 
 	opts := p2p.TCPTransportOpts {
 		ListenAddress: ":3000",
+		HandShakeFunc: p2p.NoHandShake,
 	}
 	tcpTransport := p2p.NewTCPTransport(opts)
 	tcpTransport.ListenAndAccept()

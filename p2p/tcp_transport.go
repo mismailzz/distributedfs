@@ -11,6 +11,7 @@ const (
 
 type TCPTransportOpts struct {
 	ListenAddress string
+	HandShakeFunc HandShakeFunction
 }
 
 type TCPTransport struct {
@@ -34,25 +35,33 @@ func (t *TCPTransport) ListenAndAccept() error {
 		return err
 	}
 	log.Printf("Listening on address %s", t.ListenAddress)
-	go t.AcceptLoopForConnections(t.listener)
+	go t.startAcceptLoopForConnection(t.listener)
 
 	return nil
 }
 
 // Accept incoming connections in a loop
-func (t *TCPTransport) AcceptLoopForConnections(listener net.Listener) {
+func (t *TCPTransport) startAcceptLoopForConnection(listener net.Listener) {
 	for {
-		conn, err := listener.Accept()
+		conn, err := listener.Accept() // blocking system call, will wait/halt here until a new connection comes in
 		if err != nil {
 			log.Printf("Error accepting connection: %v", err)
 			continue
 		}
-		go t.HandleConnection(conn)
+		go t.handleNewConnection(conn)
 	}
 }
 
-func (t *TCPTransport) HandleConnection(conn net.Conn) {
+func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 	log.Printf("New connection established from %s", conn.RemoteAddr().String())
+
+	// Perform handshake
+	if t.HandShakeFunc != nil { // Check if handshake function is provided
+		if err := t.HandShakeFunc(conn); err != nil {
+			log.Printf("Handshake failed with %s: %v", conn.RemoteAddr().String(), err)
+		}
+		log.Printf("Handshake successful with %s", conn.RemoteAddr().String())
+	}
 }
 
 
