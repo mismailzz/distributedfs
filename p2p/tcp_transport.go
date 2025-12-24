@@ -12,6 +12,7 @@ const (
 type TCPTransportOpts struct {
 	ListenAddress string
 	HandShakeFunc HandShakeFunction
+	DecoderFunc   Decoder
 }
 
 type TCPTransport struct {
@@ -64,19 +65,17 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 		log.Printf("Handshake successful with %s", conn.RemoteAddr().String())
 	}
 
-	rpc := &RPC{}
+	rpc := RPC{}
+	rpc.Sender = conn.RemoteAddr()
 	for { // Loop to read the message from the connection
-		
-		buf := make([]byte, 1024) // Adjust buffer size as needed
-		n, err := conn.Read(buf)
+		err := t.DecoderFunc.Decode(conn, &rpc)
 		if err != nil {
-			log.Printf("Error reading from connection %s: %v", conn.RemoteAddr().String(), err)
-			return
+			log.Printf("Error decoding message from %s: %v", conn.RemoteAddr().String(), err)
+			continue
 		}
-		rpc.Sender = conn.RemoteAddr()
-		rpc.Payload = buf[:n]
 		log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))
 	}
+
 }
 
 

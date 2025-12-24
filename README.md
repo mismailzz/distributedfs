@@ -16,4 +16,10 @@ PHASE - I = p2p lib (PeerToPeer)
 -- Also check if the HandShake Func is provided or not - which make us independent like either defined or not, if defined than we use and vice versa - woooooo 
 
 1.4 - Formatting README
+
 1.5 - Reading the Message (RPC) from the connection in the HandleConnection func (Done)
+
+1.6 - Implementing the Simple Decoder (Done)
+
+-- BUG (Not Fixed): After breaking the connection from the client terminal, this server side for that connection doesnt close the conenction and stuck in loop i.e Error decoding message from [::1]:56450: EOF
+
