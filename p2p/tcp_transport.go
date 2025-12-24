@@ -58,22 +58,28 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 
 	defer conn.Close()
 
-	log.Printf("New connection established from %s", conn.RemoteAddr().String())
+	// As be this step, the connection from remote node has been accepted or established successfully.
+	// and passed here to be handled, then we can make it a Peer object. Peer is basically become a second 
+	// name of connection in our p2p architecture.
+	peer := NewTCPPeer(conn, true) // true indicates this is an outbound connection. As someone came to us, we accepted it and make his connection as outbound.
+
+	log.Printf("New incoming connection from:%+v\n", peer)
 
 	// Perform handshake
 	if t.HandShakeFunc != nil { // Check if handshake function is provided
-		if err := t.HandShakeFunc(conn); err != nil {
-			log.Printf("Handshake failed with %s: %v", conn.RemoteAddr().String(), err)
+		if err := t.HandShakeFunc(peer); err != nil {
+			log.Printf("Handshake failed with %s: %v", conn.RemoteAddr().String(), err) // peer.conn.RemoteAddr() == conn.RemoteAddr() -> will use shortform 
 		}
-		log.Printf("Handshake successful with %s", conn.RemoteAddr().String())
+		log.Printf("Handshake successful with %s", conn.RemoteAddr().String()) // peer.conn.RemoteAddr() == conn.RemoteAddr() -> will use shortform
 	}
 
+	// Start reading messages from the connection
 	rpc := RPC{}
 	rpc.Sender = conn.RemoteAddr()
 	for { // Loop to read the message from the connection
 		err := t.DecoderFunc.Decode(conn, &rpc)
 		if err != nil {
-			log.Printf("Error decoding message from %s: %v", conn.RemoteAddr().String(), err)
+			log.Printf("Error decoding message from %s: %v", conn.RemoteAddr().String(), err) // peer.conn.RemoteAddr() == conn.RemoteAddr() -> will use shortform
 			return
 		}
 		log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))

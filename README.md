@@ -29,4 +29,12 @@ PHASE - I = p2p lib (PeerToPeer)
 
 -- Prevented infinite loop 
 
--- BUG - but this fix doesnt ensure that the error happens due to decoding logic (for which we can retry) or does it happens due to the coonection problem. Its not a good fix. :(
+-- BUG (NOT FIXED) - but this fix doesnt ensure that the error happens due to decoding logic (for which we can retry) or does it happens due to the coonection problem. Its not a good fix. :( 
+
+1.8 - Peer has been been implmeneted for TCP (Done)
+
+-- Improvement (NOT FIXED) : 
+
+--- TCPPeer is in the separate file peer.go -> it should be in the tcp_transport file but i think it should be fine for now - im considering because other files are kinda generic for other protocols not tightly bound to TCP only 
+
+--- handleNewConnection can be refactor for variable naming convention - can be made better 
