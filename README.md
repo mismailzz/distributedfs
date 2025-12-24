@@ -33,6 +33,10 @@ PHASE - I = p2p lib (PeerToPeer)
 
 1.8 - Peer has been been implmeneted for TCP (Done)
 
+-- Peer is nothing just the second name of the conn (connection) with more option as prevous testing was only based on the connection - we just change the name as our p2p architechure and to be intutive like it hard to mention the connection wording rather then peer
+
+-- Right now, we converted or called the connection a peer when the connection being able to established or accepted successfully
+
 -- Improvement (NOT FIXED) : 
 
 --- TCPPeer is in the separate file peer.go -> it should be in the tcp_transport file but i think it should be fine for now - im considering because other files are kinda generic for other protocols not tightly bound to TCP only 
