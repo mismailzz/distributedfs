@@ -1,9 +1,16 @@
 package main 
 
 import (
-	"fmt"
+	"github.com/mismailzz/distributedfs/p2p"
 )
 
 func main(){
-	fmt.Println("HelloWorld")
+
+	opts := p2p.TCPTransportOpts {
+		ListenAddress: ":3000",
+	}
+	tcpTransport := p2p.NewTCPTransport(opts)
+	tcpTransport.ListenAndAccept()
+
+	select {} // block forever
 }
