@@ -3,6 +3,7 @@ package p2p
 import (
 	"net"
 	"log"
+	"fmt"
 )
 
 const (
@@ -13,6 +14,7 @@ type TCPTransportOpts struct {
 	ListenAddress string
 	HandShakeFunc HandShakeFunction
 	DecoderFunc   Decoder
+	OnPeer func(Peer) error 
 }
 
 type TCPTransport struct {
@@ -61,6 +63,7 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 
 	defer conn.Close()
 
+	// 1. Intialize Peer
 	// As be this step, the connection from remote node has been accepted or established successfully.
 	// and passed here to be handled, then we can make it a Peer object. Peer is basically become a second 
 	// name of connection in our p2p architecture.
@@ -68,7 +71,7 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 
 	log.Printf("New incoming connection from:%+v\n", peer)
 
-	// Perform handshake
+	// 2. Perform handshake
 	if t.HandShakeFunc != nil { // Check if handshake function is provided
 		if err := t.HandShakeFunc(peer); err != nil {
 			log.Printf("Handshake failed with %s: %v", conn.RemoteAddr().String(), err) // peer.conn.RemoteAddr() == conn.RemoteAddr() -> will use shortform 
@@ -76,7 +79,16 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 		log.Printf("Handshake successful with %s", conn.RemoteAddr().String()) // peer.conn.RemoteAddr() == conn.RemoteAddr() -> will use shortform
 	}
 
-	// Start reading messages from the connection
+	// 3. Notify OnPeer 
+	// If we need to Notify, to take any action for that Peer 
+	if t.OnPeer != nil { // if OnPeer function is defined
+		if err := t.OnPeer(peer); err != nil {
+			fmt.Printf("OnPeer error: %s\n", err)
+			return 
+		}
+	}
+
+	// 4. Start reading messages from the peer connection
 	rpc := RPC{}
 	rpc.Sender = conn.RemoteAddr()
 	for { // Loop to read the message from the connection
@@ -86,8 +98,8 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 			return
 		
 		}
-	    // log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))
-		// rather then print - sending RPC messate to channel of that tcp connection
+		// rather then print message on screen 
+		// sending RPC messate to channel of that tcp connection
 		t.rpcchan <- rpc
 	}	
 

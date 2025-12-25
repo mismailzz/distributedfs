@@ -50,3 +50,9 @@ PHASE - I = p2p lib (PeerToPeer)
 --- Consume() will only help to provide the Channel outside the transport lib, so that we can read from the channel. This would be interface, as other protocol should have this too
 
 --- added the Learning.md file for some observation and learning like importance of initialization 
+
+1.10 - Notify Peer logic just added but not defined, and some refactor 
+
+---  OnPeer func - for just in case we need to take any action for particular or overall peer when its added 
+
+--- Created the Peer Interface, as other protocol will also define its own Peer. As the Current TCPPeer is only have Close() func, so we in other function we are just using Peer as a type because interface Peer does satisfy our TCP peer - concept of polymorphism 
