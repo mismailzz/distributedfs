@@ -1,8 +1,10 @@
 package main 
 
 import (
+	"fmt"
 	"github.com/mismailzz/distributedfs/p2p"
 )
+
 
 func main(){
 
@@ -14,5 +16,15 @@ func main(){
 	tcpTransport := p2p.NewTCPTransport(opts)
 	tcpTransport.ListenAndAccept()
 
+	// Go routine: to read the message from the channel being sent 
+	go func() {
+		for {
+			msg := <- tcpTransport.Consume()
+			fmt.Printf("Message Recieved: %+v\n", msg)
+		}
+	}()
+
 	select {} // block forever
+
+
 }

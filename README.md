@@ -42,3 +42,9 @@ PHASE - I = p2p lib (PeerToPeer)
 --- TCPPeer is in the separate file peer.go -> it should be in the tcp_transport file but i think it should be fine for now - im considering because other files are kinda generic for other protocols not tightly bound to TCP only 
 
 --- handleNewConnection can be refactor for variable naming convention - can be made better 
+
+1.9 - Replaced the printing RPC Message option to the Channel
+
+--- Channel would be the right way to read the message of the Peer, as this channel will be associated to every Peer 
+--- Consume() will only help to provide the Channel outside the transport lib, so that we can read from the channel. This would be interface, as other protocol should have this too
+--- added the Learning.md file for some observation and learning like importance of initialization 

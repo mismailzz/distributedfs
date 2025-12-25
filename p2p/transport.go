@@ -5,4 +5,5 @@ package p2p
 // i.e tcp, udp, grpc, etc. 
 type Transport interface {
 	ListenAndAccept() error
+	Consume() <-chan RPC // provides channel to reading the message 
 }

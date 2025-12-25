@@ -18,16 +18,19 @@ type TCPTransportOpts struct {
 type TCPTransport struct {
 	TCPTransportOpts
 	listener net.Listener
+	rpcchan chan RPC // rpc message read chan
 }
 
 // TCPTransport constructor
 func NewTCPTransport(opts TCPTransportOpts) *TCPTransport {
 	return &TCPTransport{
 		TCPTransportOpts: opts,
+		rpcchan: make(chan RPC),
 	}
 }
 
-// Start listening and accepting connections
+// ListenAndAccept() implements the Transport Interface
+// to start listening and accepting connections
 func (t *TCPTransport) ListenAndAccept() error {
 	var err error
 	t.listener, err = net.Listen(protocolType, t.ListenAddress)
@@ -81,8 +84,17 @@ func (t *TCPTransport) handleNewConnection(conn net.Conn) {
 		if err != nil {
 			log.Printf("Error decoding message from %s: %v", conn.RemoteAddr().String(), err) // peer.conn.RemoteAddr() == conn.RemoteAddr() -> will use shortform
 			return
+		
 		}
-		log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))
-	}
+	    // log.Printf("Received message from %s: %s", rpc.Sender.String(), string(rpc.Payload))
+		// rather then print - sending RPC messate to channel of that tcp connection
+		t.rpcchan <- rpc
+	}	
 
+}
+
+// Consume() implements the Transport interface
+// to provide the associated channel of a peer, to read the message send by that peer 
+func (t *TCPTransport) Consume() <-chan RPC{
+	return t.rpcchan
 }
