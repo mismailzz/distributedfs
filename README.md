@@ -43,8 +43,10 @@ PHASE - I = p2p lib (PeerToPeer)
 
 --- handleNewConnection can be refactor for variable naming convention - can be made better 
 
-1.9 - Replaced the printing RPC Message option to the Channel
+1.9 - Replaced the printing RPC Message option to the Channel (Done)
 
 --- Channel would be the right way to read the message of the Peer, as this channel will be associated to every Peer 
+
 --- Consume() will only help to provide the Channel outside the transport lib, so that we can read from the channel. This would be interface, as other protocol should have this too
+
 --- added the Learning.md file for some observation and learning like importance of initialization 
