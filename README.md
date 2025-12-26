@@ -64,3 +64,9 @@ personal tracking repo for the distributed fileserver
 2.2 - Complete writeStream with io.Reader, readStream, Delete - complete test case
 
 -- learning point: https://pkg.go.dev/io#Copy
+
+## PHASE - III = Server
+
+3.1 - Created the simple server, with intialized Store object and Transport Interface (with TCPTransport)
+
+-- currently we are listening on the port - same working as TCPTransport without using store for now
