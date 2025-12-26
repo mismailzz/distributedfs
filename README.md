@@ -1,7 +1,7 @@
 # distributedfs
 personal tracking repo for the distributed fileserver
 
-PHASE - I = p2p lib (PeerToPeer)
+## PHASE - I = p2p lib (PeerToPeer)
 
 1.1 - Intialized TCP listener and checked with the telnet command (Done)
 
@@ -56,3 +56,7 @@ PHASE - I = p2p lib (PeerToPeer)
 ---  OnPeer func - for just in case we need to take any action for particular or overall peer when its added 
 
 --- Created the Peer Interface, as other protocol will also define its own Peer. As the Current TCPPeer is only have Close() func, so we in other function we are just using Peer as a type because interface Peer does satisfy our TCP peer - concept of polymorphism 
+
+## PHASE - II = Store
+
+2.1 - Write a Simple writeStream - which create a file on the disk 

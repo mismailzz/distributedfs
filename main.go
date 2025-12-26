@@ -5,8 +5,14 @@ import (
 	"github.com/mismailzz/distributedfs/p2p"
 )
 
-
 func main(){
+
+	fmt.Println("HelloWorld")
+	
+}
+
+// This can be removed by writing the test cases 
+func mainTCPTransport() {
 
 	opts := p2p.TCPTransportOpts {
 		ListenAddress: ":3000",
@@ -25,6 +31,4 @@ func main(){
 	}()
 
 	select {} // block forever
-
-
 }
