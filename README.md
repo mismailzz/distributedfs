@@ -60,3 +60,7 @@ personal tracking repo for the distributed fileserver
 ## PHASE - II = Store
 
 2.1 - Write a Simple writeStream - which create a file on the disk 
+
+2.2 - Complete writeStream with io.Reader, readStream, Delete - complete test case
+
+-- learning point: https://pkg.go.dev/io#Copy
